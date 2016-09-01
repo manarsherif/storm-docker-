@@ -1,0 +1,45 @@
+########### These MUST be filled in for a storm configuration
+# storm.zookeeper.servers:
+#     - "server1"
+#     - "server2"
+storm.zookeeper.servers:
+    - "master"
+storm.zookeeper.port: 2181
+#
+# nimbus.host: "nimbus"
+nimbus.host: "slave"
+
+# Worker resources
+topology.mesos.worker.cpu: 1.0
+# Worker heap with 25% overhead
+topology.mesos.worker.mem.mb: 512
+worker.childopts: "-Xmx384m"
+
+# The default behavior is to launch the logviewer unless autostart is false.
+# If you enable the logviewer, you'll need to add memory overhead to the
+# executor for the logviewer.
+logviewer.port: 8000
+logviewer.childopts: "-Xmx128m"
+logviewer.cleanup.age.mins: 10080
+logviewer.appender.name: "A1"
+supervisor.autostart.logviewer: true
+
+# Supervisor resources
+topology.mesos.executor.cpu: 0.1
+topology.mesos.executor.mem.mb: 500 # Supervisor memory, with 20% overhead
+supervisor.childopts: "-Xmx400m"
+
+# Use Netty to avoid ZMQ dependencies
+storm.messaging.transport: "backtype.storm.messaging.netty.Context"
+
+storm.local.dir: "storm-local"
+
+# role must be one of the mesos-master's roles defined in the --roles flag
+#
+mesos.framework.role: "*"
+mesos.framework.checkpoint: true
+mesos.framework.name: "Storm"
+
+#mesos.container.docker.image: "mesosphere/storm:exclamation"
+mesos.container.docker.image: "localhost:5000/avidbeam"
+mesos.master.url: zk://master:2181/mesos
